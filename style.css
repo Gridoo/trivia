@@ -1,29 +1,37 @@
-body {
-    font-family: Arial, sans-serif;
+#container {
     text-align: center;
 }
 
-h1 {
-    margin-top: 50px;
+#score {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+#maxScore {
+    margin-top: 20px;
+    font-size: 20px;
 }
 
 button {
-    margin: 10px;
-    padding: 10px;
-    font-size: 20px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #3E8E41;
+    background-color: #3e8e41;
 }
 
-#result {
-    margin-top: 30px;
-    font-size: 24px;
-    font-weight: bold;
+button:active {
+    background-color: #4CAF50;
+}
+
+#startButton {
+    display: none;
 }

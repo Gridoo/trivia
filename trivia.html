@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Verdadero o Falso</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-	<h1>Verdadero o Falso</h1>
-	<p id="question">¿El sol gira alrededor de la tierra?</p>
-	<div>
-		<button onclick="checkAnswer(true)">Verdadero</button>
-		<button onclick="checkAnswer(false)">Falso</button>
-	</div>
-	<p id="result"></p>
 
-	<script src="script.js"></script>
+<head>
+    <title>Verdadero o Falso</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <h1>Verdadero o Falso</h1>
+        <div id="question"></div>
+        <div id="score">Puntuación: <span id="points"></span></div>
+        <button id="trueButton">Verdadero</button>
+        <button id="falseButton">Falso</button>
+        <button id="startButton">Empezar</button>
+        <div id="maxScore">Puntuación máxima: <span id="maxPoints"></span></div>
+    </div>
+    <script src="script.js"></script>
 </body>
+
 </html>

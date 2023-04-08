@@ -1,72 +1,182 @@
 var questions = [
 	{
-		question: "¿El sol gira alrededor de la tierra?",
-		answer: false
-	},
-	{
-		question: "¿El agua hierve a 100 grados centígrados?",
+		question: "El cielo es azul.",
 		answer: true
 	},
 	{
-		question: "¿Los seres humanos tienen 3 pulmones?",
+		question: "El agua moja.",
+		answer: true
+	},
+	{
+		question: "La tierra es plana.",
 		answer: false
 	},
 	{
-		question: "¿La luna tiene luz propia?",
+		question: "La luna es un planeta.",
 		answer: false
 	},
 	{
-		question: "¿El color del caballo blanco de Napoleón era blanco?",
+		question: "Los humanos tienen 2 piernas.",
+		answer: true
+	},
+	{
+		question: "El sol gira alrededor de la tierra.",
+		answer: false
+	},
+	{
+		question: "El oro es un metal precioso.",
+		answer: true
+	},
+	{
+		question: "El agua hierve a 100 grados Celsius.",
+		answer: true
+	},
+	{
+		question: "El viento es una corriente de agua.",
+		answer: false
+	},
+	{
+		question: "El queso es un producto lácteo.",
 		answer: true
 	}
 ];
 
-var shuffledQuestions = shuffle(questions);
-var currentQuestion = 0;
-var score = 0;
-var highScore = localStorage.getItem("highScore") || 0;
+var usedQuestions = [];
 
-function shuffle(array) {
-	var currentIndex = array.length;
-	var temporaryValue, randomIndex;
-
-	while (0 !== currentIndex) {
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex--;
-
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
-	}
-
-	return array;
+function initQuestions() {
+	usedQuestions = [];
 }
 
-function checkAnswer(userAnswer) {
-	var result = document.getElementById("result");
-
-	if (userAnswer === shuffledQuestions[currentQuestion].answer) {
-		result.innerHTML = "¡Correcto!";
-		score++;
-	} else {
-		result.innerHTML = "Incorrecto. La respuesta correcta es " + (shuffledQuestions[currentQuestion].answer ? "verdadero" : "falso") + ".";
+function getNextQuestion() {
+	if (usedQuestions.length === questions.length) {
+		return null; // todas las preguntas han sido utilizadas
 	}
 
-	currentQuestion++;
+	var randomIndex = Math.floor(Math.random() * questions.length);
 
-	if (currentQuestion < shuffledQuestions.length) {
-		document.getElementById("question").innerHTML = shuffledQuestions[currentQuestion].question;
-	} else {
-		document.getElementById("question").innerHTML = "¡Fin del juego!";
-		document.getElementsByTagName("div")[0].style.display = "none";
-		result.innerHTML += " Obtuviste " + score + " puntos.";
+	while (usedQuestions.includes(randomIndex)) {
+		randomIndex = Math.floor(Math.random() * questions.length);
+	}
 
-		if (score > highScore) {
-			highScore = score;
-			localStorage.setItem("highScore", highScore);
-			result.innerHTML += " ¡Nueva puntuación máxima!";
-		} else {
-			result.innerHTML += " Puntuación máxima: " + highScore;
+	usedQuestions.push(randomIndex);
+
+	return questions[randomIndex];
+}
+
+var score = 0;
+var maxScore = 0;
+var currentQuestion = null;
+
+var questionElement = document.getElementById("question");
+var pointsElement = document.getElementById("points");
+var maxPointsElement = document.getElementById("maxPoints");
+
+var trueButton = document.getElementById("trueButton");
+var falseButton = document.getElementById("falseButton");
+var startButton = document.getElementById("startButton");
+
+trueButton.addEventListener("click", function() {
+	if (currentQuestion.answer === true) {
+		score++;
+	}
+	
+	displayNextQuestion();
+});
+
+falseButton.addEventListener("click", function() {
+	if (currentQuestion.answer === false) {
+		score++;
+	}
+	
+	displayNextQuestion();
+});
+
+startButton.addEventListener("click", function() {
+	score = 0;
+	maxScore = getMaxScore();
+	initQuestions();
+	displayNextQuestion();
+	startButton.style.display = "none";
+});
+
+function getMaxScore() {
+	var maxScore = localStorage.getItem("maxScore");
+	
+	if (maxScore === null) {
+		maxScore = 0;
+	}
+	
+	return parseInt(maxScore);
+}
+
+function setMaxScore(maxScore) {
+	localStorage.setItem("maxScore", maxScore.toString());
+}
+
+function displayQuestion(question) {
+	questionElement.textContent = question.question;
+}
+
+function displayScore() {
+	pointsElement.textContent = score;
+	maxPointsElement.textContent = maxScore;
+}
+
+function displayNextQuestion() {
+	var nextQuestion = getNextQuestion();
+	
+	if (nextQuestion === null) {
+		alert("Fin del juego. Tu puntuación máxima es " + maxScore + ".");
+		startButton.style.display = "inline-block";
+		
+		if (score > maxScore) {
+			maxScore = score;
+			setMaxScore(maxScore);
 		}
+		
+		score = 0;
+	} else {
+		currentQuestion = nextQuestion;
+		displayQuestion(currentQuestion);
+		displayScore();
+	}
+}
+
+displayNextQuestion();
+
+trueButton.addEventListener("click", function() {
+	if (currentQuestion.answer === true) {
+		score++;
+	}
+	
+	displayNextQuestion();
+});
+
+falseButton.addEventListener("click", function() {
+	if (currentQuestion.answer === false) {
+		score++;
+	}
+	
+	displayNextQuestion();
+});
+
+function displayNextQuestion() {
+	var nextQuestion = getNextQuestion();
+	
+	if (nextQuestion === null) {
+		alert("Fin del juego. Tu puntuación máxima es " + maxScore + ".");
+		startButton.style.display = "inline-block";
+		
+		if (score > maxScore) {
+			maxScore = score;
+			setMaxScore(maxScore);
+		}
+		
+		score = 0;
+		usedQuestions = [];
+	} else {
+		currentQuestion = nextQuestion;
+		displayQuestion(currentQuestion);
+		displayScore();
 	}
 }
